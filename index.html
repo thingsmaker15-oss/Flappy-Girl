@@ -70,18 +70,18 @@
     const ctx = canvas.getContext("2d");
     
     // --- LOAD ASSETS ---
-    const birdImg1 = new Image(); birdImg1.src = "assets/gf_bird_1.png";
-    const birdImg2 = new Image(); birdImg2.src = "assets/gf_bird_2.png";
-    const pipeImg = new Image(); pipeImg.src = "assets/pipe_photo.png";
+    const birdImg1 = new Image(); birdImg1.src = "gf_bird_1.png";
+    const birdImg2 = new Image(); birdImg2.src = "gf_bird_2.png";
+    const pipeImg = new Image(); pipeImg.src = "pipe_photo.png";
     
     const bgImages = [new Image(), new Image(), new Image(), new Image()];
-    bgImages[0].src = "assets/bg_morning.jpg";
-    bgImages[1].src = "assets/bg_evening.jpg";
-    bgImages[2].src = "assets/bg_dusk.jpg";
-    bgImages[3].src = "assets/bg_night.jpg";
+    bgImages[0].src = "bg_morning.jpg";
+    bgImages[1].src = "bg_evening.jpg";
+    bgImages[2].src = "bg_dusk.jpg";
+    bgImages[3].src = "bg_night.jpg";
 
-    const scoreSound = new Audio("assets/score.mp3");
-    const hitSound = new Audio("assets/hit.mp3");
+    const scoreSound = new Audio("score.mp3");
+    const hitSound = new Audio("hit.mp3");
 
     // --- GAME VARIABLES ---
     let frames = 0;
@@ -218,7 +218,7 @@
         
         failAnimationInterval = setInterval(() => {
             toggle = !toggle;
-            gfFailImg.src = toggle ? "assets/cry_2.png" : "assets/cry_1.png";
+            gfFailImg.src = toggle ? "cry_2.png" : "cry_1.png";
         }, 300); 
     }
 
@@ -226,16 +226,8 @@
         // Show the screens and scores
         document.getElementById("game-over-screen").style.display = "flex";
         document.getElementById("final-score").innerText = "Score: " + score;
-        document.getElementById("end-high-score").innerText = "Best Score: " + highScore;
-        document.getElementById("start-high-score").innerText = "Best Score: " + highScore;
-        
-        // Alternating funny face logic
-        let gfFailImg = document.getElementById("gf-fail-img");
-        let toggle = false;
-        failAnimationInterval = setInterval(() => {
-            toggle = !toggle;
-            gfFailImg.src = toggle ? "assets/cry_2.png" : "assets/cry_1.png";
-        }, 300); // changes every 300ms
+        document.getElementById("end-high-score").innerText = "Best Score: " + highScore;;
+        document.getElementById("start-high-score").innerText = "Best Score: " + highScore
     
 
     function resetGame() {
