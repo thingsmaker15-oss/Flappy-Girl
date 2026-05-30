@@ -110,13 +110,32 @@
 
        const pipes = {
         items: [], width: 60, gap: 180, dx: 2,
-                draw() {
+                        draw() {
             for(let i = 0; i < this.items.length; i++) {
                 let p = this.items[i];
-                ctx.drawImage(pipeImg, p.x, p.y, this.width, p.topHeight);
-                ctx.drawImage(pipeImg, p.x, p.y + p.topHeight + this.gap, this.width, canvas.height - p.topHeight - this.gap);
+                
+                if (pipeImg.complete && pipeImg.naturalWidth > 0) {
+                    
+                    // --- DRAW TOP PIPE (INVERTED & STRETCHED TO CEILING) ---
+                    ctx.save(); 
+                    ctx.translate(p.x, 0); // Move to pipe's X position at the absolute top
+                    ctx.scale(1, -1);      // Flip upside down vertically
+                    
+                    // Forces the photo to stretch exactly from the ceiling (0) to the opening gap (p.topHeight)
+                    ctx.drawImage(pipeImg, 0, -p.topHeight, this.width, p.topHeight); 
+                    ctx.restore();
+
+
+                    // --- DRAW BOTTOM PIPE (STRETCHED TO FLOOR) ---
+                    // Calculate exactly how much space is left from the gap down to the floor
+                    let bottomPipeHeight = canvas.height - (p.topHeight + this.gap);
+                    
+                    // Forces the photo to stretch exactly from the gap down to the very bottom edge
+                    ctx.drawImage(pipeImg, p.x, p.topHeight + this.gap, this.width, bottomPipeHeight);
+                }
             }
         },
+
         update() {
             // SPEED FORMULA: Base speed (2) + 0.05 for every point she scores.
             // At 10 points, speed is 2.5. At 20 points, speed is 3.
