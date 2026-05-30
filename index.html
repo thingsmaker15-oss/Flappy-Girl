@@ -214,11 +214,10 @@
         isGameOver = true;
         hitSound.play();
                 
-        // --- ADD THESE 3 LINES RIGHT HERE ---
-        if (navigator.vibrate) {
-            // Vibrate for 300ms, pause for 100ms, vibrate for 300ms (feels like a crash!)
-            navigator.vibrate([300, 100, 300]); 
+                if (navigator.vibrate) {
+            navigator.vibrate(300); // One solid 300ms buzz
         }
+
                 
         // --- HIGH SCORE LOGIC ---
         if (score > highScore) {
