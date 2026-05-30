@@ -53,10 +53,10 @@
     </div>
 
     <div id="game-over-screen" class="screen">
-        <h1>OUCH!</h1>
+        <h1>അയ്യേ!</h1>
         <div class="fail-images">
-            <img id="gf-fail-img" src="assets/cry_1.png" alt="Crying">
-            <img src="assets/you_smile.png" alt="You Smiling">
+            <img id="gf-fail-img" src="cry_1.png" alt="Crying">
+            <img src="you_smile.png" alt="You Smiling">
         </div>
         <h2 id="final-score">Score: 0</h2>
         <h2 id="end-high-score">Best Score: 0</h2>
@@ -110,17 +110,43 @@
 
        const pipes = {
         items: [], width: 60, gap: 180, dx: 2,
-        draw() {
+                draw() {
             for(let i = 0; i < this.items.length; i++) {
                 let p = this.items[i];
-                ctx.drawImage(pipeImg, p.x, p.y, this.width, p.topHeight);
-                ctx.drawImage(pipeImg, p.x, p.y + p.topHeight + this.gap, this.width, canvas.height - p.topHeight - this.gap);
+                
+                if (pipeImg.complete && pipeImg.naturalWidth > 0) {
+                    let aspect = pipeImg.naturalHeight / pipeImg.naturalWidth;
+                    let targetHeight = this.width * aspect;
+
+                    // --- DRAW TOP PIPE (INVERTED) ---
+                    ctx.save(); // Save current canvas state
+                    
+                    // 1. Translate origin to top left corner of top pipe area
+                    // (We are moving the "drawing point" to the x coordinate, y is still 0)
+                    ctx.translate(p.x, 0); 
+
+                    // 2. Scale canvas by -1 on Y-axis to flip it upside down
+                    ctx.scale(1, -1); 
+
+                    // 3. Draw at (0, -height) relative to flipped origin 
+                    // ctx.drawImage(image, x, y, width, height)
+                    // The 'assets/' path should be removed if you are fixing the GitHub bug!
+                    ctx.drawImage(pipeImg, 0, -p.topHeight, this.width, targetHeight); 
+
+                    ctx.restore(); // Restore canvas state to draw normal again
+
+
+                    // --- DRAW BOTTOM PIPE (NORMAL) ---
+                    // The 'assets/' path should be removed here too if you are fixing the GitHub bug!
+                    ctx.drawImage(pipeImg, p.x, p.topHeight + this.gap, this.width, targetHeight);
+                }
             }
         },
+
         update() {
-            // SPEED FORMULA: Base speed (2) + 0.02 for every point she scores.
-            // At 10 points, speed is 2.2. At 20 points, speed is 2.4.
-            let currentSpeed = this.dx + (score * 0.02);
+            // SPEED FORMULA: Base speed (2) + 0.05 for every point she scores.
+            // At 10 points, speed is 2.5. At 20 points, speed is 3.
+            let currentSpeed = this.dx + (score * 0.05);
 
             // SPAWN LOGIC: Spawn a new pipe whenever the last pipe has moved 400 pixels away
             let lastPipe = this.items[this.items.length - 1];
