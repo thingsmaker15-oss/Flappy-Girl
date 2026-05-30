@@ -110,27 +110,26 @@
 
        const pipes = {
         items: [], width: 60, gap: 180, dx: 2,
-                        draw() {
+                                draw() {
             for(let i = 0; i < this.items.length; i++) {
                 let p = this.items[i];
                 
                 if (pipeImg.complete && pipeImg.naturalWidth > 0) {
                     
-                    // --- DRAW TOP PIPE (INVERTED & STRETCHED TO CEILING) ---
+                    // --- DRAW TOP PIPE (UPSIDE DOWN) ---
                     ctx.save(); 
-                    ctx.translate(p.x, 0); // Move to pipe's X position at the absolute top
-                    ctx.scale(1, -1);      // Flip upside down vertically
-                    
-                    // Forces the photo to stretch exactly from the ceiling (0) to the opening gap (p.topHeight)
-                    ctx.drawImage(pipeImg, 0, -p.topHeight, this.width, p.topHeight); 
-                    ctx.restore();
+                    // 1. Move the drawing anchor to the bottom edge of the top pipe (the gap opening)
+                    ctx.translate(p.x, p.topHeight); 
+                    // 2. Flip the canvas upside down vertically
+                    ctx.scale(1, -1);      
+                    // 3. Draw from the gap opening, stretching exactly to the height of the ceiling
+                    ctx.drawImage(pipeImg, 0, 0, this.width, p.topHeight); 
+                    ctx.restore(); // Snap canvas back to normal
 
-
-                    // --- DRAW BOTTOM PIPE (STRETCHED TO FLOOR) ---
-                    // Calculate exactly how much space is left from the gap down to the floor
+                    // --- DRAW BOTTOM PIPE (NORMAL) ---
                     let bottomPipeHeight = canvas.height - (p.topHeight + this.gap);
                     
-                    // Forces the photo to stretch exactly from the gap down to the very bottom edge
+                    // Draw normally from the gap opening down to the floor
                     ctx.drawImage(pipeImg, p.x, p.topHeight + this.gap, this.width, bottomPipeHeight);
                 }
             }
